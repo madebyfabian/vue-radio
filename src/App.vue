@@ -1,26 +1,65 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <main :class="{ searchViewOpened }">
+    <Player />
+    <transition name="show">
+      <Search v-if="searchViewOpened" />
+    </transition>
+  </main>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+  import { computed } from 'vue'
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  import '@/scss/main.scss'
+  import useStore from '@/store'
+  import Player from '@/views/Player.view'
+  import Search from '@/views/Search.view'
+  
+  export default {
+    name: 'App',
+    components: { Player, Search },
+
+    setup() {
+      const { searchViewOpened } = useStore()
+
+      return { searchViewOpened }
+    }
   }
-}
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="scss" scoped>
+  .View-Player, .View-Search {
+    transition: transform 300ms cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .View-Player {
+    transform: none;
+  }
+
+  main.searchViewOpened .View-Player {
+    transform: translateX(-50%);
+  }
+  
+
+  .View-Search {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateX(0);
+  }
+
+  .show-enter-from,
+  .show-leave-to {
+    transform: translateX(100%);
+  }
+
+
+  button {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 999999;
+  }
 </style>
