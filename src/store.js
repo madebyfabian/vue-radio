@@ -29,7 +29,7 @@ const localStorageGet = key => {
 // ------------
 const store = reactive({
   searchViewOpened: false,
-  playerIsStopped: false,
+  playerIsStopped: true,
   userFavorites: [],
   streamUrls: [],
   currStreamObj: null
