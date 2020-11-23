@@ -22,12 +22,13 @@
     components: { Player, Search },
 
     setup() {
-      const { searchViewOpened, syncUserFavorites, syncStreamUrls, syncCurrStreamObj } = useStore()
+      const { searchViewOpened, syncUserFavorites, syncStreamUrls, syncCurrStreamObj, syncPlayerVolume } = useStore()
 
       onMounted(() => {
         syncUserFavorites()
         syncStreamUrls(),
-        syncCurrStreamObj()
+        syncCurrStreamObj(),
+        syncPlayerVolume()
       })
 
       return { searchViewOpened }

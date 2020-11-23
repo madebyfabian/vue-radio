@@ -1,6 +1,6 @@
 <template>
-  <div class="slider">
-    <div class="slider__track-progress" :style="{ 'width': trackProgressCSS }"></div>
+  <div class="SliderInput">
+    <div class="SliderInput__track-progress" :style="{ 'width': trackProgressCSS }"></div>
     <input 
       :min="min"
       :max="max" 
@@ -13,8 +13,6 @@
 
 <script>
   export default {
-    name: 'Slider',
-
     props: {
       min:        { type: String, default: '1' },
       max:        { type: String, default: '100' },
@@ -39,7 +37,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .slider {
+  .SliderInput {
     --track: var(--color-bg-tertiary);
     --primary: var(--color-content-secondary);
     height: 1rem;

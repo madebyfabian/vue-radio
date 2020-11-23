@@ -7,14 +7,17 @@
         <p class="isUppercase">Now playing</p>
         <h2>{{ currStreamObj.title }}</h2>
 
-        <div style="background: green; width: 40px; height: 120px; display: flex; align-items: center; justify-content: center">
-          <SliderInput v-model="playerVolume" min="0" max="100" />
-        </div>
-
         <div class="player-buttonBar">
-          <IconButton isLarge>
-            <Icon isLarge name="arrow" />
-          </IconButton>
+          <div class="volumeControl">
+            <IconButton isLarge>
+              <div v-if="playerValueComputed === 0"><Icon isLarge name="sound-0" /></div>
+              <div v-else-if="playerValueComputed <= 50"><Icon isLarge name="sound-50" /></div>
+              <div v-else-if="playerValueComputed > 50"><Icon isLarge name="sound-100" /></div>
+            </IconButton>
+            <div class="volumeControl-bar">
+              <SliderInput v-model="playerValueComputed" min="0" max="100" />
+            </div>
+          </div>
 
           <IconButton @click="handleStopButtonClick" isLarge isPrimary>
             <div v-if="!playerIsLoading">
@@ -61,13 +64,18 @@
         playerIsStopped, setPlayerIsStopped, 
         setSearchViewOpened,
         streamUrls, addStreamUrl, 
-        currStreamObj
+        currStreamObj,
+        playerVolume, setPlayerVolume
       } = useStore()
 
       const audioSrc = ref(null),
             audioEl = ref(null),
-            playerIsLoading = ref(false),
-            playerVolume = ref(40)
+            playerIsLoading = ref(false)
+
+      const playerValueComputed = computed({
+        get: () => playerVolume.value,
+        set: newVal => setPlayerVolume(newVal)
+      })
       
       const handleStopButtonClick = () => {
         let newVal = playerIsStopped.value ? false : true
@@ -75,14 +83,14 @@
       }
 
       onMounted(() => {
+        // Set Audio Player volume.
         const $audio = audioEl.value
+        watch(playerValueComputed, newVal => {
+          $audio.volume = newVal / 100
+        })
 
-        $audio.volume = .2
-
-        setTimeout(() => $audio.volume = 1, 5000)
-
+        // Set new stream. First, check if stream url is loaded.
         watch(currStreamObj, async newItem => {
-          // Set new stream. First, check if stream url is loaded.
           const urlData = streamUrls.value.find(item => item.id === newItem.id)
           let url = urlData?.url
           if (!url) 
@@ -96,7 +104,7 @@
       return { 
         playerIsLoading,
         playerIsStopped, 
-        playerVolume,
+        playerValueComputed,
         setPlayerIsStopped, 
         setSearchViewOpened, 
         handleStopButtonClick, 
@@ -141,7 +149,7 @@
     }
 
     h2 {
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
     }
 
     &-buttonBar {
@@ -149,8 +157,45 @@
       align-items: center;
       justify-content: center;
 
-      .IconButton {
-        margin: 0 .25rem 0;
+      > * {
+        margin: 0 .375rem 0;
+      }
+    }
+
+    .volumeControl {
+      position: relative;
+
+      &:hover .volumeControl-bar {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+      }
+
+      .IconButton:hover {
+        opacity: 1!important
+      }
+
+      &-bar {
+        opacity: 0;
+        visibility: hidden;
+        background: var(--color-bg-secondary); 
+        width: 2.5rem; 
+        height: 7.5rem; 
+        margin: 0 0 -.25rem .5rem;
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        position: absolute;
+        bottom: 100%;
+        border-radius: .75rem;
+        transition-property: opacity, visibility, transform;
+        transition-duration: 150ms;
+        transition-timing-function: ease;
+        transform: translateY(.5rem);
+
+        .SliderInput {
+          position: absolute;
+        }
       }
     }
   }

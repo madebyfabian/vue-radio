@@ -5,6 +5,7 @@ import { reactive, toRefs } from 'vue'
 // ------------
 const lsKeys = {
   userFavorites: 'user.favorites',
+  playerVolume: 'user.playerVolume',
   streamUrls: 'streamUrls',
   currStreamObj: 'currStreamObj'
 }
@@ -30,6 +31,7 @@ const localStorageGet = key => {
 const store = reactive({
   searchViewOpened: false,
   playerIsStopped: true,
+  playerVolume: 100,
   userFavorites: [],
   streamUrls: [],
   currStreamObj: null
@@ -115,6 +117,22 @@ export default function useStore() {
   }
 
 
+  // ------
+  // "currStreamObj"
+  // ------
+  const syncPlayerVolume = () => {
+    let vol = localStorageGet(lsKeys.playerVolume)
+    if (typeof vol !== 'number') {
+      vol = 100; localStorageSet(lsKeys.playerVolume, vol)
+    }
+    store.playerVolume = vol
+  }
+  const setPlayerVolume = newVal => {
+    store.playerVolume = newVal
+    localStorageSet(lsKeys.playerVolume, store.playerVolume)
+  }
+
+
   return {
     ...toRefs(store),
     setSearchViewOpened,
@@ -128,6 +146,9 @@ export default function useStore() {
     addStreamUrl,
     
     syncCurrStreamObj,
-    setCurrStreamObj
+    setCurrStreamObj,
+
+    syncPlayerVolume,
+    setPlayerVolume
   }
 }
