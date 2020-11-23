@@ -62,22 +62,15 @@
     margin: 0 -1.5rem;
     cursor: pointer;
     user-select: none;
-    transition: background 150ms ease;
+    transition: background-color 150ms ease;
     position: relative;
 
     &:last-child .RadioStationItem-content {
       border-bottom: none
     }
 
-    h2, p, .RadioStationItem-image {
-      // transition: opacity 150ms ease;
-    }
-
     &:hover {
-      background: var(--color-bg-secondary);
-      // h2, p, .RadioStationItem-image {
-      //   opacity: .75;
-      // }
+      background-color: var(--color-bg-secondary);
 
       .RadioStationItem-image .iconOverlay {
         opacity: .75;
