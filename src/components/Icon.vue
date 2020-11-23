@@ -18,7 +18,9 @@
 
 <style lang="scss" scoped>
   .Icon {
-    height: 1.5rem;
-    width: 1.5rem;
+    font-size: 1.5rem;
+    height: 1em;
+    width: 1em;
+    display: table;
   }
 </style>

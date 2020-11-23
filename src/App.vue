@@ -8,19 +8,26 @@
 </template>
 
 <script>
-  import { computed } from 'vue'
+  import { computed, onMounted } from 'vue'
 
   import '@/scss/main.scss'
   import useStore from '@/store'
   import Player from '@/views/Player.view'
   import Search from '@/views/Search.view'
+
+  
   
   export default {
     name: 'App',
     components: { Player, Search },
 
     setup() {
-      const { searchViewOpened } = useStore()
+      const { searchViewOpened, syncUserFavorites, syncStreamUrls } = useStore()
+
+      onMounted(() => {
+        syncUserFavorites()
+        syncStreamUrls()
+      })
 
       return { searchViewOpened }
     }
