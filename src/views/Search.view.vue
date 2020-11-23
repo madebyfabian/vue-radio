@@ -3,16 +3,14 @@
     <BaseLink class="searchOpenLink" iconLeft @click="setSearchViewOpened(false)">Back</BaseLink>  
     <SearchInput v-model="inputVal" />
 
-    <section>
-      <div v-if="!searchResults || !inputVal">
-        <p v-if="userFavorites.length" class="favoritesHeadline isSmall isUppercase" v-text="`Your Favorites`" />
-        <RadioStationItem v-for="(item, key) of userFavorites" :key="key" :item="item" />
-      </div>
+    <section v-if="!searchResults || !inputVal">
+      <p v-if="userFavorites.length" class="sectionHeadline isSmall isUppercase" v-text="`Your Favorites`" />
+      <RadioStationItem v-for="(item, key) of userFavorites" :key="key" :item="item" />
+    </section>
 
-      <div v-else>
-        <p v-if="searchResults.length" class="favoritesHeadline isSmall isUppercase" v-text="`Search Results`" />
-        <RadioStationItem v-for="(item, key) of searchResults" :key="key" :item="item" />
-      </div>
+    <section v-else>
+      <p v-if="searchResults.length" class="sectionHeadline isSmall isUppercase" v-text="`Search Results`" />
+      <RadioStationItem v-for="(item, key) of searchResults" :key="key" :item="item" />
     </section>
   </div>
 </template>
@@ -94,7 +92,8 @@
     margin: 1.5rem 0 2.5rem;
   }
 
-  .favoritesHeadline {
+  .sectionHeadline {
     color: var(--color-content-secondary);
+    margin-bottom: .5rem;
   }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <img v-svg-inline class="Icon" :src="iconSrc" :alt="name">
+  <img v-svg-inline class="Icon" :class="{ isLarge }" :src="iconSrc" :alt="name">
 </template>
 
 <script>
@@ -7,8 +7,10 @@
   
   export default {
     props: {
-      name: { type: String, required: true, validator: val => val.length }
+      name: { type: String, required: true, validator: val => val.length },
+      isLarge: { type: Boolean, default: false }
     },
+
     setup( props ) {
       const iconSrc = computed(() => require(`../assets/icons/icon-${props.name}.svg`))
       return { iconSrc }
@@ -22,5 +24,9 @@
     height: 1em;
     width: 1em;
     display: table;
+
+    &.isLarge {
+      font-size: 2rem;
+    }
   }
 </style>

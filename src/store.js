@@ -70,7 +70,7 @@ export default function useStore() {
   const syncStreamUrls = () => {
     let urls = localStorageGet(lsKeys.streamUrls)
     if (!urls) {
-      urls = []; localStorageSet(lsKeys.streamUrls, [])
+      urls = []; localStorageSet(lsKeys.streamUrls, urls)
     }
     store.streamUrls = urls
   }
@@ -102,6 +102,13 @@ export default function useStore() {
   // ------
   // "currStreamObj"
   // ------
+  const syncCurrStreamObj = () => {
+    let obj = localStorageGet(lsKeys.currStreamObj)
+    if (!obj) {
+      obj = null; localStorageSet(lsKeys.currStreamObj, obj)
+    }
+    store.currStreamObj = obj
+  }
   const setCurrStreamObj = newObj => {
     store.currStreamObj = newObj
     localStorageSet(lsKeys.currStreamObj, store.currStreamObj)
@@ -120,6 +127,7 @@ export default function useStore() {
     syncStreamUrls,
     addStreamUrl,
     
+    syncCurrStreamObj,
     setCurrStreamObj
   }
 }

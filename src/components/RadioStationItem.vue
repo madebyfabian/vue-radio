@@ -2,54 +2,41 @@
   <article class="RadioStationItem" :data-id="item.id" @click="handleClick">
     <div class="RadioStationItem-image" role="image" :style="{ backgroundImage: item.image && `url('${ item.image }')` }">
       <div class="iconOverlay">
-        <Icon name="play-solid" />
+        <Icon name="play" />
       </div>
     </div>
     <div class="RadioStationItem-content">
       <h2>{{ item.title }}</h2>
       <p class="isSmall">{{ item.subtitle || '' }}</p>
     </div>
-    <button class="RadioStationItem-iconWrap" @click="handleFavoriteButtonClick">
-      <div :class="{ isHidden: isFavorite }"><Icon name="heart" /></div>
-      <div :class="{ isHidden: !isFavorite }"><Icon name="heart-solid" /></div>
-    </button>
+
+    <IconButton :item="item" displayFavoriteState />
   </article>
 </template>
 
 <script>
-  import useStore from '@/store'
-  import Icon from '@/components/Icon'
   import { computed } from 'vue'
+  import useStore from '@/store'
+
+  import Icon from '@/components/Icon'
+  import IconButton from '@/components/IconButton'
 
   export default {
     props: {
       item: { type: Object, required: true }
     },
 
-    components: { Icon },
+    components: { Icon, IconButton },
 
     setup( props ) {
-      const { userFavorites, addUserFavorite, removeUserFavorite, streamUrls, addStreamUrl, setCurrStreamObj } = useStore()
+      const { setCurrStreamObj } = useStore()
 
-      const isFavorite = computed(() => {
-        return !!userFavorites?.value?.find(favoriteItem => favoriteItem?.id === props.item?.id)
-      })
-
-      const handleFavoriteButtonClick = () => {
-        if (isFavorite.value)
-          removeUserFavorite(props.item.id)
-        else
-          addUserFavorite(props.item)
-      }
-
-      /**
-       * Play stream.
-       */
+      // Play stream.
       const handleClick = async () => {
         setCurrStreamObj(props.item)
       }
 
-      return { isFavorite, handleFavoriteButtonClick, handleClick }
+      return { handleClick }
     }
   }
 </script>
@@ -73,10 +60,9 @@
       background-color: var(--color-bg-secondary);
 
       .RadioStationItem-image .iconOverlay {
-        opacity: .75;
+        opacity: 1;
       }
     }
-
     
     &-image {
       height: 2.5rem;
@@ -116,42 +102,10 @@
       }
     }
 
-    &-iconWrap {
+    .IconButton {
       position: absolute;
       right: 1.5rem;
-      width: 1.5rem;
-      height: 1.5rem;
       margin-left: -1.5rem;
-      cursor: pointer;
-      padding: 0;
-      border: none;
-      margin: 0;
-      background: none;
-      z-index: 10;
-      color: var(--color-content-tertiary);
-
-      &:hover {
-        > div {
-          &.isHidden {
-            opacity: .33!important;
-          }
-
-          &:not(.isHidden) {
-            opacity: 1!important;
-          }
-        }
-      }
-
-      > div {
-        position: absolute;
-        left: 0;
-        top: 0;
-        transition: opacity 150ms ease;
-
-        &.isHidden {
-          opacity: 0;
-        }
-      }
     }
   }
 </style>

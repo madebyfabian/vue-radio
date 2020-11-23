@@ -4,23 +4,20 @@
       <div class="player" v-if="currStreamObj">
         <div class="player-image" role="image" :style="{ backgroundImage: currStreamObj.image && `url('${ currStreamObj.image }')` }" />
 
+        <p class="isUppercase">Now playing</p>
         <h2>{{ currStreamObj.title }}</h2>
 
         <div class="player-buttonBar">
-          <!-- Lautstärke -->
-          <button class="player-button player-button-secondary">
-            <div><Icon name="heart" /></div>
-          </button>
+          <IconButton isLarge>
+            <Icon isLarge name="arrow" />
+          </IconButton>
 
-          <button class="player-button" @click="handleButtonClick">
-            <div v-if="playerIsStopped"><Icon name="play-solid" /></div>
-            <div v-else><Icon name="pause" /></div>
-          </button>
+          <IconButton @click="handleStopButtonClick" isLarge isPrimary>
+            <div v-if="playerIsStopped"><Icon isLarge name="play" /></div>
+            <div v-else><Icon isLarge name="pause" /></div>
+          </IconButton>
 
-          <!-- Heart -->
-          <button class="player-button player-button-secondary">
-            <div><Icon name="heart" /></div>
-          </button>
+          <IconButton :item="currStreamObj" displayFavoriteState isLarge />
         </div>
 
         <!-- <audio ref="audio" :src="audioSrc" autoplay /> -->
@@ -35,10 +32,11 @@
   import { computed, watch, ref, onMounted } from 'vue'
   import useStore from '@/store'
   import BaseLink from '@/components/BaseLink'
+  import IconButton from '@/components/IconButton'
   import Icon from '@/components/Icon'
   
   export default {
-    components: { BaseLink, Icon },
+    components: { BaseLink, Icon, IconButton },
 
     setup() {
       // Refs
@@ -51,7 +49,7 @@
 
       const audioSrc = ref(null)
       
-      const handleButtonClick = () => {
+      const handleStopButtonClick = () => {
         setPlayerIsStopped(playerIsStopped.value ? false : true)
       }
 
@@ -70,7 +68,7 @@
         playerIsStopped, 
         setPlayerIsStopped, 
         setSearchViewOpened, 
-        handleButtonClick, 
+        handleStopButtonClick, 
         audioSrc,
         currStreamObj
       }
@@ -99,54 +97,29 @@
       height: 7.5rem;
       width: 7.5rem;
       border-radius: 1.25rem;
-      margin: 0 auto;
+      margin: 0 auto 1.5rem;
       background-color: white;
       background-size: cover;
       background-position: center center;
+    }
+
+    p {
+      color: var(--color-content-secondary);
+      margin-bottom: .5rem;
+    }
+
+    h2 {
+      margin-bottom: 2rem;
     }
 
     &-buttonBar {
       display: flex;
       align-items: center;
       justify-content: center;
-    }
 
-    &-button {
-      height: 3.5rem;
-      width: 3.5rem;
-      border-radius: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 2rem .25rem 0;
-      appearance: none;
-      border: none;
-      outline: none;
-      color: var(--color-bg-primary);
-      background-color: var(--color-content-primary);
-      cursor: pointer;
-      transition: opacity 150ms ease;
-
-      &:hover {
-        opacity: .75;
+      .IconButton {
+        margin: 0 .25rem 0;
       }
-
-      .Icon {
-        font-size: 2rem;
-      }
-
-      &-secondary {
-        background: transparent;
-        color: var(--color-content-tertiary);
-      }
-    }
-
-    h2 {
-      margin: 1rem 0 .5rem;
-    }
-
-    p {
-      color: var(--color-content-secondary);
     }
   }
 
