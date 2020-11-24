@@ -27,15 +27,14 @@
     components: { Icon },
 
     setup( props ) {
-      const item  = props?.item,
-            id    = item?.id
-
       const { addUserFavorite, removeUserFavorite } = useStore()
-      const { isFavorite } = useIsFavorite({ id })
+      const { isFavorite } = useIsFavorite({ id: props?.item?.id })
 
       const handleClick = () => {
         if (props.displayFavoriteState) 
-          return isFavorite.value ? removeUserFavorite(id) : addUserFavorite(item)
+          isFavorite.value 
+            ? removeUserFavorite(props?.item?.id) 
+            : addUserFavorite(props?.item)
       }
 
       return { isFavorite, handleClick }

@@ -5,12 +5,12 @@
 
     <section v-if="!searchResults || !inputVal">
       <p v-if="userFavorites.length" class="sectionHeadline isSmall isUppercase" v-text="`Your Favorites`" />
-      <RadioStationItem v-for="(item, key) of userFavorites" :key="key" :item="item" />
+      <RadioStationItem v-for="item of userFavorites" :key="item.id" :item="item" />
     </section>
 
     <section v-else>
       <p v-if="searchResults.length" class="sectionHeadline isSmall isUppercase" v-text="`Search Results`" />
-      <RadioStationItem v-for="(item, key) of searchResults" :key="key" :item="item" />
+      <RadioStationItem v-for="item of searchResults" :key="item.id" :item="item" />
     </section>
   </div>
 </template>
