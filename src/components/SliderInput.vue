@@ -14,23 +14,23 @@
 <script>
   export default {
     props: {
-      min:        { type: String, default: '1' },
-      max:        { type: String, default: '100' },
-      step:       { type: String, default: '1' },
-      modelValue: { type: Number, required: true }
+      min:    { type: String, default: '1' },
+      max:    { type: String, default: '100' },
+      step:   { type: String, default: '1' },
+      value:  { type: Number, required: true }
     },
 
     computed: {
       'trackProgressCSS'() {
-        const width = Math.round((this.modelValue - this.min) / (this.max - this.min) * 100),
+        const width = Math.round((this.value - this.min) / (this.max - this.min) * 100),
               pos   = ((50 - width) * 2 / 100 * 8)
 
         return `calc(${width}% + ${pos}px)`
       },
 
       'compValue': {
-        get() { return this.modelValue },
-        set(newValue) { this.$emit('update:modelValue', newValue) }
+        get() { return this.value },
+        set(newValue) { this.$emit('update', newValue) }
       }
     }
   }

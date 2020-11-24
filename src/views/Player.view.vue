@@ -10,12 +10,12 @@
         <div class="player-buttonBar">
           <div class="volumeControl">
             <IconButton isLarge>
-              <div v-if="playerVolumeComputed === 0"><Icon isLarge name="sound-0" /></div>
-              <div v-else-if="playerVolumeComputed <= 50"><Icon isLarge name="sound-50" /></div>
-              <div v-else-if="playerVolumeComputed > 50"><Icon isLarge name="sound-100" /></div>
+              <div v-if="playerVolume === 0"><Icon isLarge name="sound-0" /></div>
+              <div v-else-if="playerVolume <= 50"><Icon isLarge name="sound-50" /></div>
+              <div v-else-if="playerVolume > 50"><Icon isLarge name="sound-100" /></div>
             </IconButton>
             <div class="volumeControl-bar">
-              <SliderInput v-model="playerVolumeComputed" min="0" max="100" />
+              <SliderInput :value="playerVolume" @update="setPlayerVolume" min="0" max="100" />
             </div>
           </div>
 
@@ -71,16 +71,11 @@
       const audioSrc = ref(null),
             audioEl = ref(null),
             playerIsLoading = ref(false)
-
-      const playerVolumeComputed = computed({
-        get: () => playerVolume.value,
-        set: newVal => setPlayerVolume(newVal)
-      })
       
       onMounted(() => {
         // Set Audio Player volume.
         const $audio = audioEl.value
-        watch(playerVolumeComputed, newVal => {
+        watch(playerVolume, newVal => {
           $audio.volume = newVal / 100
         })
 
@@ -104,11 +99,11 @@
               break
           
             case 'ARROWUP':
-              playerVolumeComputed.value += 5
+              setPlayerVolume(playerVolume.value + 5)
               break
 
             case 'ARROWDOWN':
-              playerVolumeComputed.value -= 5
+              setPlayerVolume(playerVolume.value - 5)
               break
           }
         })
@@ -117,8 +112,9 @@
       return { 
         playerIsLoading,
         playerIsStopped, 
-        playerVolumeComputed,
-        setPlayerIsStopped, 
+        setPlayerIsStopped,
+        playerVolume,
+        setPlayerVolume,
         setSearchViewOpened, 
         audioSrc,
         audioEl,
