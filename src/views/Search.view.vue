@@ -70,9 +70,7 @@
             image: item.Image,
             streamUrl: null
           }))
-        } catch (error) {
-          console.error(error)
-        }
+        } catch (_) {}
       }
       watch(inputVal, getStations)
 

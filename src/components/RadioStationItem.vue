@@ -29,11 +29,14 @@
     components: { Icon, IconButton },
 
     setup( props ) {
-      const { setCurrStreamObj } = useStore()
+      const { setCurrStreamObj, setSearchViewOpened } = useStore()
 
-      // Play stream.
-      const handleClick = async () => {
+      const handleClick = () => {
+        // Play stream.
         setCurrStreamObj(props.item)
+
+        // Navigate back to player
+        setSearchViewOpened(false)
       }
 
       return { handleClick }

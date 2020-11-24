@@ -88,6 +88,9 @@
             url = await addStreamUrl(newItem.id)
 
           audioSrc.value = url
+          setTimeout(() => {
+            setPlayerIsStopped(false)
+          }, 100)
         })
 
         // Handle keyboard shortcut presses.
