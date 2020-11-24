@@ -128,6 +128,7 @@ export default function useStore() {
     store.playerVolume = vol
   }
   const setPlayerVolume = newVal => {
+    newVal = Math.min(Math.max(parseInt(newVal), 0), 100) // limit between 0 and 100
     store.playerVolume = newVal
     localStorageSet(lsKeys.playerVolume, store.playerVolume)
   }
