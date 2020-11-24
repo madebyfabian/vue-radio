@@ -10,16 +10,16 @@
         <div class="player-buttonBar">
           <div class="volumeControl">
             <IconButton isLarge>
-              <div v-if="playerValueComputed === 0"><Icon isLarge name="sound-0" /></div>
-              <div v-else-if="playerValueComputed <= 50"><Icon isLarge name="sound-50" /></div>
-              <div v-else-if="playerValueComputed > 50"><Icon isLarge name="sound-100" /></div>
+              <div v-if="playerVolumeComputed === 0"><Icon isLarge name="sound-0" /></div>
+              <div v-else-if="playerVolumeComputed <= 50"><Icon isLarge name="sound-50" /></div>
+              <div v-else-if="playerVolumeComputed > 50"><Icon isLarge name="sound-100" /></div>
             </IconButton>
             <div class="volumeControl-bar">
-              <SliderInput v-model="playerValueComputed" min="0" max="100" />
+              <SliderInput v-model="playerVolumeComputed" min="0" max="100" />
             </div>
           </div>
 
-          <IconButton @click="handleStopButtonClick" isLarge isPrimary>
+          <IconButton @click="playerIsStopped = !playerIsStopped" isLarge isPrimary>
             <div v-if="!playerIsLoading">
               <div v-if="playerIsStopped"><Icon isLarge name="play" /></div>
               <div v-else><Icon isLarge name="pause" /></div>
@@ -72,20 +72,15 @@
             audioEl = ref(null),
             playerIsLoading = ref(false)
 
-      const playerValueComputed = computed({
+      const playerVolumeComputed = computed({
         get: () => playerVolume.value,
         set: newVal => setPlayerVolume(newVal)
       })
       
-      const handleStopButtonClick = () => {
-        let newVal = playerIsStopped.value ? false : true
-        setPlayerIsStopped(newVal)
-      }
-
       onMounted(() => {
         // Set Audio Player volume.
         const $audio = audioEl.value
-        watch(playerValueComputed, newVal => {
+        watch(playerVolumeComputed, newVal => {
           $audio.volume = newVal / 100
         })
 
@@ -99,15 +94,32 @@
 
           audioSrc.value = url
         })
+
+        // Handle keyboard shortcut presses.
+        window.addEventListener('keydown', e => {
+          let key = e.code.toUpperCase()
+          switch (key) {
+            case 'SPACE':
+              playerIsStopped.value = !playerIsStopped.value
+              break
+          
+            case 'ARROWUP':
+              playerVolumeComputed.value += 5
+              break
+
+            case 'ARROWDOWN':
+              playerVolumeComputed.value -= 5
+              break
+          }
+        })
       })
 
       return { 
         playerIsLoading,
         playerIsStopped, 
-        playerValueComputed,
+        playerVolumeComputed,
         setPlayerIsStopped, 
         setSearchViewOpened, 
-        handleStopButtonClick, 
         audioSrc,
         audioEl,
         currStreamObj
@@ -169,10 +181,6 @@
         opacity: 1;
         visibility: visible;
         transform: none;
-      }
-
-      .IconButton:hover {
-        opacity: 1!important
       }
 
       &-bar {
