@@ -1,8 +1,8 @@
 <template>
   <button class="IconButton" :class="{ isLarge, isPrimary }" @click.stop="handleClick">
     <div v-if="displayFavoriteState" class="IconButton-favoriteWrap" :class="{ isActive: isFavorite }">
-      <div class="isRegular"><Icon :isLarge="isLarge" name="heart" /></div>
-      <div class="isSolid"><Icon :isLarge="isLarge" name="heart-solid" /></div>
+      <Icon class="isRegular" :isLarge="isLarge" name="heart" />
+      <Icon class="isSolid" :isLarge="isLarge" name="heart-solid" />
     </div>
 
     <slot />

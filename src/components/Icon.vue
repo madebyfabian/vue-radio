@@ -1,5 +1,7 @@
 <template>
-  <img v-svg-inline class="Icon" :class="{ isLarge }" :src="iconSrc" :alt="name">
+  <div class="Icon" :class="{ isLarge }">
+    <img class="Icon-svg" v-svg-inline  :src="iconSrc" :alt="name">
+  </div>
 </template>
 
 <script>
@@ -27,6 +29,12 @@
 
     &.isLarge {
       font-size: 2rem;
+    }
+
+    &-svg {
+      display: block;
+      height: 100%;
+      width: 100%;
     }
   }
 </style>

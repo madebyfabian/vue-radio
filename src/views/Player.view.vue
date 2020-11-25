@@ -10,9 +10,9 @@
         <div class="player-buttonBar">
           <div class="volumeControl">
             <IconButton isLarge>
-              <div v-if="playerVolume === 0"><Icon isLarge name="sound-0" /></div>
-              <div v-else-if="playerVolume <= 50"><Icon isLarge name="sound-50" /></div>
-              <div v-else-if="playerVolume > 50"><Icon isLarge name="sound-100" /></div>
+              <Icon      v-if="playerVolume === 0" name="sound-0"   isLarge />
+              <Icon v-else-if="playerVolume <= 50" name="sound-50"  isLarge />
+              <Icon v-else-if="playerVolume > 50"  name="sound-100" isLarge />
             </IconButton>
             <div class="volumeControl-bar">
               <SliderInput :value="playerVolume" @update="setPlayerVolume" min="0" max="100" />
@@ -20,13 +20,10 @@
           </div>
 
           <IconButton @click="playerIsStopped = !playerIsStopped" isLarge isPrimary>
-            <div v-if="!playerIsLoading">
-              <div v-if="playerIsStopped"><Icon isLarge name="play" /></div>
-              <div v-else><Icon isLarge name="pause" /></div>
-            </div>
-            <div v-else>
-              ...
-            </div>
+            <Icon v-if="!playerIsLoading && playerIsStopped"  name="play"  isLarge />
+            <Icon v-if="!playerIsLoading && !playerIsStopped" name="pause" isLarge />
+          
+            <div v-if="playerIsLoading">...</div>
           </IconButton>
 
           <IconButton :item="currStreamObj" displayFavoriteState isLarge />
