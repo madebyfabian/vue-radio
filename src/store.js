@@ -1,8 +1,5 @@
 import { reactive, toRefs } from 'vue'
 
-// ------------
-// Utils
-// ------------
 const lsKeys = {
   userFavorites: 'user.favorites',
   playerVolume: 'user.playerVolume',
@@ -10,24 +7,9 @@ const lsKeys = {
   currStreamObj: 'stream.currObj'
 }
 
-const localStorageSet = ( key, value ) => {
-  value = JSON.stringify(value)
-  localStorage.setItem(key, value)
-}
+const setLsItem = ( key, value ) => localStorage.setItem(key, JSON.stringify(value))
+const getLsItem = key => { try { return JSON.parse(localStorage.getItem(key)) } catch (_) { return undefined } }
 
-const localStorageGet = key => {
-  try {
-    return JSON.parse(localStorage.getItem(key))
-  } catch (_) {
-    return undefined
-  }
-}
-
-
-
-// ------------
-// Exports
-// ------------
 const store = reactive({
   searchViewOpened: false,
   playerIsStopped: true,
@@ -46,15 +28,15 @@ export default function useStore() {
   // "userFavorites"
   // ------
   const syncUserFavorites = () => {
-    let items = localStorageGet(lsKeys.userFavorites)
+    let items = getLsItem(lsKeys.userFavorites)
     if (!items) {
-      items = []; localStorageSet(lsKeys.userFavorites, [])
+      items = []; setLsItem(lsKeys.userFavorites, [])
     }
     store.userFavorites = items
   }
   const addUserFavorite = newItem => {
     store.userFavorites.push(newItem)
-    localStorageSet(lsKeys.userFavorites, store.userFavorites)
+    setLsItem(lsKeys.userFavorites, store.userFavorites)
   }
   const removeUserFavorite = id => {
     const index = store.userFavorites.findIndex(item => item.id === id)
@@ -62,7 +44,7 @@ export default function useStore() {
       return 
     store.userFavorites.splice(index, 1)
 
-    localStorageSet(lsKeys.userFavorites, store.userFavorites)
+    setLsItem(lsKeys.userFavorites, store.userFavorites)
   }
 
 
@@ -70,9 +52,9 @@ export default function useStore() {
   // "streamUrls"
   // ------
   const syncStreamUrls = () => {
-    let urls = localStorageGet(lsKeys.streamUrls)
+    let urls = getLsItem(lsKeys.streamUrls)
     if (!urls) {
-      urls = []; localStorageSet(lsKeys.streamUrls, urls)
+      urls = []; setLsItem(lsKeys.streamUrls, urls)
     }
     store.streamUrls = urls
   }
@@ -92,7 +74,7 @@ export default function useStore() {
 
       store.streamUrls.push({ id, url })
 
-      localStorageSet(lsKeys.streamUrls, store.streamUrls)
+      setLsItem(lsKeys.streamUrls, store.streamUrls)
 
       return url
     } catch (error) {
@@ -105,9 +87,9 @@ export default function useStore() {
   // "currStreamObj"
   // ------
   const syncCurrStreamObj = () => {
-    let obj = localStorageGet(lsKeys.currStreamObj)
+    let obj = getLsItem(lsKeys.currStreamObj)
     if (!obj) {
-      obj = null; localStorageSet(lsKeys.currStreamObj, obj)
+      obj = null; setLsItem(lsKeys.currStreamObj, obj)
 
       // Navigate user to search view.
       setSearchViewOpened(true)
@@ -117,7 +99,7 @@ export default function useStore() {
   }
   const setCurrStreamObj = newObj => {
     store.currStreamObj = newObj
-    localStorageSet(lsKeys.currStreamObj, store.currStreamObj)
+    setLsItem(lsKeys.currStreamObj, store.currStreamObj)
   }
 
 
@@ -125,16 +107,16 @@ export default function useStore() {
   // "currStreamObj"
   // ------
   const syncPlayerVolume = () => {
-    let vol = localStorageGet(lsKeys.playerVolume)
+    let vol = getLsItem(lsKeys.playerVolume)
     if (typeof vol !== 'number') {
-      vol = 100; localStorageSet(lsKeys.playerVolume, vol)
+      vol = 100; setLsItem(lsKeys.playerVolume, vol)
     }
     store.playerVolume = vol
   }
   const setPlayerVolume = newVal => {
     newVal = Math.min(Math.max(parseInt(newVal), 0), 100) // limit between 0 and 100
     store.playerVolume = newVal
-    localStorageSet(lsKeys.playerVolume, store.playerVolume)
+    setLsItem(lsKeys.playerVolume, store.playerVolume)
   }
 
 
