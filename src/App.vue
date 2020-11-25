@@ -22,14 +22,10 @@
     setup() {
       const { 
         searchViewOpened, setSearchViewOpened,
-        currStreamObj,
         syncUserFavorites, syncStreamUrls, syncCurrStreamObj, syncPlayerVolume 
       } = useStore()
 
       onMounted(() => {
-        if (!currStreamObj.value)
-          setSearchViewOpened(true)
-
         syncUserFavorites()
         syncStreamUrls(),
         syncCurrStreamObj(),

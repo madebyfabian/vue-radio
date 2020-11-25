@@ -108,7 +108,11 @@ export default function useStore() {
     let obj = localStorageGet(lsKeys.currStreamObj)
     if (!obj) {
       obj = null; localStorageSet(lsKeys.currStreamObj, obj)
+
+      // Navigate user to search view.
+      setSearchViewOpened(true)
     }
+    
     store.currStreamObj = obj
   }
   const setCurrStreamObj = newObj => {
