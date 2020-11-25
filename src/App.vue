@@ -15,16 +15,21 @@
   import Player from '@/views/Player.view'
   import Search from '@/views/Search.view'
 
-  
-  
   export default {
     name: 'App',
     components: { Player, Search },
 
     setup() {
-      const { searchViewOpened, syncUserFavorites, syncStreamUrls, syncCurrStreamObj, syncPlayerVolume } = useStore()
+      const { 
+        searchViewOpened, setSearchViewOpened,
+        currStreamObj,
+        syncUserFavorites, syncStreamUrls, syncCurrStreamObj, syncPlayerVolume 
+      } = useStore()
 
       onMounted(() => {
+        if (!currStreamObj.value)
+          setSearchViewOpened(true)
+
         syncUserFavorites()
         syncStreamUrls(),
         syncCurrStreamObj(),
