@@ -21,7 +21,7 @@
 
     setup() {
       const { 
-        searchViewOpened, setSearchViewOpened,
+        searchViewOpened,
         syncUserFavorites, syncStreamUrls, syncCurrStreamObj, syncPlayerVolume 
       } = useStore()
 
