@@ -12,6 +12,8 @@
 </template>
 
 <script>
+  import { computed } from 'vue'
+
   export default {
     props: {
       min:    { type: String, default: '1' },
@@ -20,18 +22,20 @@
       value:  { type: Number, required: true }
     },
 
-    computed: {
-      'trackProgressCSS'() {
-        const width = Math.round((this.value - this.min) / (this.max - this.min) * 100),
-              pos   = ((50 - width) * 2 / 100 * 8)
+    setup( props, { emit } ) {
+      const trackProgressCSS = computed(() => {
+        let width = Math.round((props.value - props.min) / (props.max - props.min) * 100),
+            pos   = (50 - width) * 2 / 100 * 8
 
-        return `calc(${width}% + ${pos}px)`
-      },
+        return `calc(${ width }% + ${ pos }px)`
+      })
 
-      'compValue': {
-        get() { return this.value },
-        set(newValue) { this.$emit('update', newValue) }
-      }
+      const compValue = computed({
+        get: () => props.value,
+        set: newVal => emit('update', newVal)
+      })
+
+      return { trackProgressCSS, compValue }
     }
   }
 </script>
