@@ -6,8 +6,8 @@ import { reactive, toRefs } from 'vue'
 const lsKeys = {
   userFavorites: 'user.favorites',
   playerVolume: 'user.playerVolume',
-  streamUrls: 'streamUrls',
-  currStreamObj: 'currStreamObj'
+  streamUrls: 'stream.urls',
+  currStreamObj: 'stream.currObj'
 }
 
 const localStorageSet = ( key, value ) => {
