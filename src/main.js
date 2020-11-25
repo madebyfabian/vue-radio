@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router'
 import './registerServiceWorker'
 
 
@@ -14,4 +13,4 @@ import VueSvgInlinePlugin from 'vue-svg-inline-plugin'
 app.use(VueSvgInlinePlugin)
 
 
-app.use(router).mount('#app')
+app.mount('#app')
