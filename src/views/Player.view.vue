@@ -62,7 +62,7 @@
       // Refs
       const { 
         playerIsStopped, setPlayerIsStopped, 
-        setSearchViewOpened,
+        searchViewOpened, setSearchViewOpened,
         streamUrls, addStreamUrl, 
         currStreamObj,
         playerVolume, setPlayerVolume
@@ -95,6 +95,9 @@
 
         // Handle keyboard shortcut presses.
         window.addEventListener('keydown', e => {
+          if (searchViewOpened.value)
+            return
+
           let key = e.code.toUpperCase()
           switch (key) {
             case 'SPACE':
