@@ -3,6 +3,7 @@ import { reactive, toRefs } from 'vue'
 const lsKeys = {
   userFavorites: 'user.favorites',
   playerVolume: 'user.playerVolume',
+  playerIsMuted: 'user.playerIsMuted',
   streamUrls: 'stream.urls',
   currStreamObj: 'stream.currObj'
 }
@@ -13,6 +14,7 @@ const getLsItem = key => { try { return JSON.parse(localStorage.getItem(key)) } 
 const store = reactive({
   searchViewOpened: false,
   playerIsStopped: true,
+  playerIsMuted: false, // If user clicks volume button, the volume is still preserved in "playerVolume" but the <audio> gets set to muted="true".
   playerVolume: 100,
   userFavorites: [],
   streamUrls: [],
@@ -104,7 +106,7 @@ export default function useStore() {
 
 
   // ------
-  // "currStreamObj"
+  // "playerVolume"
   // ------
   const syncPlayerVolume = () => {
     let vol = getLsItem(lsKeys.playerVolume)
@@ -117,6 +119,22 @@ export default function useStore() {
     newVal = Math.min(Math.max(parseInt(newVal), 0), 100) // limit between 0 and 100
     store.playerVolume = newVal
     setLsItem(lsKeys.playerVolume, store.playerVolume)
+  }
+
+
+  // ------
+  // "playerIsMuted"
+  // ------
+  const syncPlayerIsMuted = () => {
+    let isMuted = getLsItem(lsKeys.playerIsMuted)
+    if (typeof isMuted !== 'boolean') {
+      isMuted = false; setLsItem(lsKeys.playerIsMuted, isMuted)
+    }
+    store.playerIsMuted = isMuted
+  }
+  const setPlayerIsMuted = newVal => {
+    store.playerIsMuted = newVal
+    setLsItem(lsKeys.playerIsMuted, newVal)
   }
 
 
@@ -136,6 +154,9 @@ export default function useStore() {
     setCurrStreamObj,
 
     syncPlayerVolume,
-    setPlayerVolume
+    setPlayerVolume,
+
+    syncPlayerIsMuted,
+    setPlayerIsMuted
   }
 }

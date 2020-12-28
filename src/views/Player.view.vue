@@ -9,17 +9,17 @@
 
         <div class="player-buttonBar">
           <div class="volumeControl">
-            <IconButton isLarge>
-              <Icon      v-if="playerVolume === 0" name="sound-0"   isLarge />
+            <IconButton isLarge @click="handleMutePlayerClick">
+              <Icon v-if="playerVolume === 0 || playerIsMuted" name="sound-0" isLarge />
               <Icon v-else-if="playerVolume <= 50" name="sound-50"  isLarge />
               <Icon v-else-if="playerVolume > 50"  name="sound-100" isLarge />
             </IconButton>
             <div class="volumeControl-bar">
-              <SliderInput :value="playerVolume" @update="setPlayerVolume" min="0" max="100" />
+              <SliderInput :value="!playerIsMuted ? playerVolume : 0" @update="handleVolumeSliderInput" min="0" max="100" />
             </div>
           </div>
 
-          <IconButton @click="playerIsStopped = !playerIsStopped" isLarge isPrimary>
+          <IconButton @click="setPlayerIsStopped(!playerIsStopped)" isLarge isPrimary>
             <Icon v-if="!playerIsLoading && playerIsStopped"  name="play"  isLarge />
             <Icon v-if="!playerIsLoading && !playerIsStopped" name="pause" isLarge />
           
@@ -36,7 +36,7 @@
     <audio 
       ref="audioEl" 
       :src="audioSrc" 
-      :muted="playerIsStopped"
+      :muted="playerIsStopped || playerIsMuted"
       autoplay 
       @loadstart="playerIsLoading = true" 
       @loadeddata="playerIsLoading = false" 
@@ -59,6 +59,7 @@
       // Refs
       const { 
         playerIsStopped, setPlayerIsStopped, 
+        playerIsMuted, setPlayerIsMuted,
         searchViewOpened, setSearchViewOpened,
         streamUrls, addStreamUrl, 
         currStreamObj,
@@ -68,12 +69,28 @@
       const audioSrc = ref(null),
             audioEl = ref(null),
             playerIsLoading = ref(false)
-      
+
+      // Handle user input update player volume with the slider
+      const handleVolumeSliderInput = newVal => {
+        // Unmute player, since user actively interacts with the slider, even if he muted before.
+        setPlayerIsMuted(false)
+        setPlayerVolume(newVal)
+      }
+
+      const handleMutePlayerClick = () => {
+        // If user manually dragged the slider to 0, then this button will have (visually) no effect. So set the volume up a little.
+        if (playerVolume.value === 0)
+          setPlayerVolume(15)
+
+        setPlayerIsMuted(!playerIsMuted.value)
+      }
+    
       onMounted(() => {
         // Set Audio Player volume.
         const $audio = audioEl.value
         watch(playerVolume, newVal => {
           $audio.volume = newVal / 100
+          setPlayerIsMuted(newVal === 0)
         })
 
         // Set new stream. First, check if stream url is loaded.
@@ -115,13 +132,17 @@
       return { 
         playerIsLoading,
         playerIsStopped, 
+        playerIsMuted,
+        setPlayerIsMuted,
         setPlayerIsStopped,
         playerVolume,
         setPlayerVolume,
         setSearchViewOpened, 
         audioSrc,
         audioEl,
-        currStreamObj
+        currStreamObj,
+        handleVolumeSliderInput,
+        handleMutePlayerClick
       }
     }
   }
