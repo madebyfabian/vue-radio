@@ -1,6 +1,6 @@
 <template>
   <div class="Icon" :class="{ isLarge }">
-    <img class="Icon-svg" v-svg-inline  :src="iconSrc" :alt="name">
+    <img class="Icon-svg" v-svg-inline.sprite viewBox="0 0 24 24" :src="iconSrc" :alt="name" >
   </div>
 </template>
 
@@ -25,7 +25,6 @@
     font-size: 1.5rem;
     height: 1em;
     width: 1em;
-    display: table;
 
     &.isLarge {
       font-size: 2rem;
