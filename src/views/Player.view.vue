@@ -105,7 +105,7 @@
           setTimeout(() => {
             setPlayerIsStopped(false)
           }, 100)
-        })
+        }, { immediate: true })
 
         // Handle keyboard shortcut presses.
         window.addEventListener('keydown', e => {

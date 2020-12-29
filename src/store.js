@@ -1,4 +1,4 @@
-import { reactive, toRefs } from 'vue'
+import { reactive, ref, toRefs } from 'vue'
 
 const lsKeys = {
   userFavorites: 'user.favorites',
@@ -11,6 +11,8 @@ const lsKeys = {
 const setLsItem = ( key, value ) => localStorage.setItem(key, JSON.stringify(value))
 const getLsItem = key => { try { return JSON.parse(localStorage.getItem(key)) } catch (_) { return undefined } }
 
+const lsIsSynced = ref(false)
+
 const store = reactive({
   searchViewOpened: false,
   playerIsStopped: true,
@@ -22,24 +24,35 @@ const store = reactive({
 })
 
 export default function useStore() {
+  // Loop localStorage keys once to sync persisting localStorage into vue store.
+  if (!lsIsSynced.value) {
+    const storeDefaultValues = JSON.parse(JSON.stringify(store))
+
+    for (const [ key, lsKey = value ] of Object.entries(lsKeys)) {
+      const defaultVal = storeDefaultValues[key]
+      let val = getLsItem(lsKey)
+      if (!val) {
+        val = defaultVal; 
+        setLsItem(lsKey, defaultVal)
+      }
+      store[key] = val
+    }
+
+    lsIsSynced.value = true
+  }
+
+
   const setSearchViewOpened = val => store.searchViewOpened = val
+
+
   const setPlayerIsStopped = val => store.playerIsStopped = val
 
 
-  // ------
-  // "userFavorites"
-  // ------
-  const syncUserFavorites = () => {
-    let items = getLsItem(lsKeys.userFavorites)
-    if (!items) {
-      items = []; setLsItem(lsKeys.userFavorites, [])
-    }
-    store.userFavorites = items
-  }
   const addUserFavorite = newItem => {
     store.userFavorites.push(newItem)
     setLsItem(lsKeys.userFavorites, store.userFavorites)
   }
+
   const removeUserFavorite = id => {
     const index = store.userFavorites.findIndex(item => item.id === id)
     if (index === undefined)
@@ -50,16 +63,6 @@ export default function useStore() {
   }
 
 
-  // ------
-  // "streamUrls"
-  // ------
-  const syncStreamUrls = () => {
-    let urls = getLsItem(lsKeys.streamUrls)
-    if (!urls) {
-      urls = []; setLsItem(lsKeys.streamUrls, urls)
-    }
-    store.streamUrls = urls
-  }
   const addStreamUrl = async id => {
     // Fetches the streaming URl for a given id and attaches it to the item saved in localstorage/store.
     const index = store.streamUrls.findIndex(item => item.id === id)
@@ -85,36 +88,12 @@ export default function useStore() {
   }
 
 
-  // ------
-  // "currStreamObj"
-  // ------
-  const syncCurrStreamObj = () => {
-    let obj = getLsItem(lsKeys.currStreamObj)
-    if (!obj) {
-      obj = null; setLsItem(lsKeys.currStreamObj, obj)
-
-      // Navigate user to search view.
-      setSearchViewOpened(true)
-    }
-    
-    store.currStreamObj = obj
-  }
   const setCurrStreamObj = newObj => {
     store.currStreamObj = newObj
     setLsItem(lsKeys.currStreamObj, store.currStreamObj)
   }
 
 
-  // ------
-  // "playerVolume"
-  // ------
-  const syncPlayerVolume = () => {
-    let vol = getLsItem(lsKeys.playerVolume)
-    if (typeof vol !== 'number') {
-      vol = 100; setLsItem(lsKeys.playerVolume, vol)
-    }
-    store.playerVolume = vol
-  }
   const setPlayerVolume = newVal => {
     newVal = Math.min(Math.max(parseInt(newVal), 0), 100) // limit between 0 and 100
     store.playerVolume = newVal
@@ -122,16 +101,6 @@ export default function useStore() {
   }
 
 
-  // ------
-  // "playerIsMuted"
-  // ------
-  const syncPlayerIsMuted = () => {
-    let isMuted = getLsItem(lsKeys.playerIsMuted)
-    if (typeof isMuted !== 'boolean') {
-      isMuted = false; setLsItem(lsKeys.playerIsMuted, isMuted)
-    }
-    store.playerIsMuted = isMuted
-  }
   const setPlayerIsMuted = newVal => {
     store.playerIsMuted = newVal
     setLsItem(lsKeys.playerIsMuted, newVal)
@@ -142,21 +111,10 @@ export default function useStore() {
     ...toRefs(store),
     setSearchViewOpened,
     setPlayerIsStopped,
-
-    syncUserFavorites,
-    addUserFavorite,
-    removeUserFavorite,
-
-    syncStreamUrls,
+    addUserFavorite, removeUserFavorite,
     addStreamUrl,
-    
-    syncCurrStreamObj,
     setCurrStreamObj,
-
-    syncPlayerVolume,
     setPlayerVolume,
-
-    syncPlayerIsMuted,
     setPlayerIsMuted
   }
 }

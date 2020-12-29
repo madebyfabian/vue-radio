@@ -67,8 +67,7 @@
             title: item.Title,
             subtitle: item.Subtitle,
             description: item.Description,
-            image: item.Image,
-            streamUrl: null
+            image: item.Image
           }))
         } catch (_) {}
       }
