@@ -125,6 +125,10 @@
             case 'ARROWDOWN':
               setPlayerVolume(playerVolume.value - 5)
               break
+
+            case 'KEYM':
+              setPlayerIsMuted(!playerIsMuted.value)
+              break
           }
         })
       })
