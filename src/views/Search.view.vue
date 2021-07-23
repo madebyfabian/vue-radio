@@ -29,7 +29,7 @@
     components: { BaseLink, SearchInput, RadioStationItem },
 
     setup() {
-      const { userFavorites, setSearchViewOpened } = useStore()
+      const { userFavorites, setSearchViewOpened, proxyUrl } = useStore()
       const inputVal = ref('')
 
       const searchResults = ref(null)
@@ -55,7 +55,7 @@
         })
         
         try {
-          const res = await fetch('https://cors-everywhere.herokuapp.com/https://api.tunein.com/profiles?' + params.toString(), { signal: controller.signal })
+          const res = await fetch(proxyUrl.value + '/https://api.tunein.com/profiles?' + params.toString(), { signal: controller.signal })
           let data = await res.json()
           data = data?.Items?.[0]?.Children
           if (!data)

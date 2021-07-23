@@ -20,7 +20,8 @@ const store = reactive({
   playerVolume: 100,
   userFavorites: [],
   streamUrls: [],
-  currStreamObj: null
+  currStreamObj: null,
+  proxyUrl: 'https://cors-anywhere-madebyfabian.herokuapp.com'
 })
 
 export default function useStore() {
@@ -71,7 +72,7 @@ export default function useStore() {
 
     try {
       const params = new URLSearchParams({ render: 'json', id })
-      const res = await fetch('https://cors-anywhere.herokuapp.com/https://opml.radiotime.com/Tune.ashx?' + params.toString())
+      const res = await fetch(store.proxyUrl + '/https://opml.radiotime.com/Tune.ashx?' + params.toString())
       let data = await res.json()
       let url = data?.body?.[0].url
       if (!url)
