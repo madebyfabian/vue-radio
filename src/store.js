@@ -28,7 +28,7 @@ const store = reactive({
 	userFavorites: [],
 	streamUrls: [],
 	currStreamObj: null,
-	proxyUrl: 'https://cors-anywhere-madebyfabian.up.railway.app',
+	proxyUrl: 'https://cors-anywhere.madebyfabian.com',
 })
 
 export default function useStore() {
