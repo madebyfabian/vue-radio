@@ -2,8 +2,6 @@
 
 # vue-radio
 A minimal PWA for listening to your favorite radio station out of 100.000+. Uses the TuneIn API.
-<br>
-<a href="https://vue-radio.netlify.app" target="_blank">Open App ↗</a>
 
 <br>
 <hr>
